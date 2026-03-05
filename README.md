@@ -26,11 +26,12 @@ AI4S-101/
 ├── generate_data.py             # 数据下载与预处理
 ├── models.py                    # 自编码器模型定义
 ├── train.py                     # 训练与可视化主脚本（命令行）
-├── AI4S_Lesson1_Fluid_AE.ipynb  # Jupyter 交互式教程
+├── AI4S_Lesson1_Fluid_AE.ipynb  # Jupyter 交互式 AE 教程
+├── AI4S_Lesson1_Fluid_VAE.ipynb # Jupyter 交互式 VAE 生成模型教程
 ├── data/                        # 数据目录
-│   ├── flow_field.npy          # 预处理后的流场数据（运行 generate_data.py 后生成）
+│   ├── flow_field.npy          # 预处理后的流场数据（仓库已自带，可直接使用；也可通过 generate_data.py 从原始数据重新生成）
 │   ├── flow_field_params.npy   # 归一化参数（可选）
-│   └── DATA/FLUIDS/            # 原始 MAT 数据（需先下载 DATA.zip 并解压）
+│   └── DATA/FLUIDS/            # 原始 MAT 数据（可选，本仓库默认不包含，需自行下载 DATA.zip 并解压）
 │       └── CYLINDER_ALL.mat
 └── outputs/                     # 所有可视化与模型输出（运行 train.py 后生成）
     ├── flow_fields.png
@@ -77,15 +78,24 @@ AI4S-101/
 | **输出** | 全部在 `outputs/` 下，见 [输出结果一览](#输出结果一览)。 |
 | **用法** | `python train.py`（默认 CPU；若需 GPU 可自行改 `setup_environment()` 中的 `device`）。 |
 
-### 4. `AI4S_Lesson1_Fluid_AE.ipynb` — 交互式教程
+### 4. `AI4S_Lesson1_Fluid_AE.ipynb` — AE 交互式教程
 
 | 功能 | 说明 |
 |------|------|
 | **作用** | 与 `train.py` 逻辑一致，但拆成多节：环境、数据加载、流场与动画、模型、训练、重构、潜在空间插值、滑块交互、异常检测、PCA vs AE、总结。 |
-| **依赖** | 需先有 `data/flow_field.npy`（即先运行 `generate_data.py`）。 |
+| **依赖** | 需先有 `data/flow_field.npy`（仓库默认已包含；如需从原始数据重新生成，可先运行 `generate_data.py`）。 |
 | **输出** | 图表在 Notebook 内显示；若在代码里保存到 `outputs/`，则与 `train.py` 输出位置一致。模型可保存为 `outputs/flow_ae_model.pth`。 |
 
-### 5. `requirements.txt` — 依赖列表
+### 5. `AI4S_Lesson1_Fluid_VAE.ipynb` — VAE 生成模型交互式教程
+
+| 功能 | 说明 |
+|------|------|
+| **作用** | 使用变分自编码器 (VAE) 对同一 Re=100 圆柱绕流涡量场进行建模，展示潜在空间采样与**生成新流场**的能力。整体 pipeline 与 AE 版本类似，包括数据加载、训练、重构、潜在空间插值、随机采样与滑块交互等。 |
+| **特点** | Latent 空间为高斯分布 (`mu`, `logvar`)，通过重参数化技巧采样；所有图表标题、坐标轴和颜色条全部为英文，避免中文字体兼容问题。 |
+| **依赖** | 需要 `data/flow_field.npy`（仓库默认已包含），不强制要求本地存在原始 `CYLINDER_ALL.mat`。 |
+| **输出** | 主要为 Notebook 内联图像，包括 VAE 训练曲线、重构对比、潜在插值以及从先验随机采样得到的流场示例。 |
+
+### 6. `requirements.txt` — 依赖列表
 
 列出运行本课程代码所需的 Python 包及最低版本，用于 `pip install -r requirements.txt`。
 
@@ -122,19 +132,28 @@ pip install -r requirements.txt
 
 ### Step 1：准备数据
 
-1. **下载原始数据（若尚未下载）**  
-   - 打开 [http://dmdbook.com/DATA.zip](http://dmdbook.com/DATA.zip) 下载并解压。  
-   - 将解压得到的 `DATA` 文件夹放到项目下的 `data/` 目录，使路径为：  
-     `data/DATA/FLUIDS/CYLINDER_ALL.mat`  
+> **快速开始提示**：本仓库已经自带预处理好的 `data/flow_field.npy`，默认情况下你可以**直接跳到 Step 2 训练模型**，无需下载原始 DATA.zip。
 
-2. **运行数据预处理脚本**  
+1. **快速开始（推荐）**  
+   - 克隆仓库后，检查 `data/flow_field.npy` 是否存在（默认已经包含）。  
+   - 若存在，可直接执行 Step 2：`python train.py` 或运行 Notebook。
 
-```bash
-python generate_data.py
-```
+2. **从原始数据重新处理（可选，高级用法）**  
+   仅当你希望完整体验「从原始数据到预处理」全流程时，才需要下面两步：
 
-- 会读取 `data/DATA/FLUIDS/CYLINDER_ALL.mat`，重采样并归一化，生成 **`data/flow_field.npy`**。  
-- 若无 MAT 文件，可在 `generate_data.py` 的 `prepare_flow_data()` 调用中设 `use_synthetic=True`，改用合成数据。
+   1) **下载原始数据（若尚未下载）**  
+      - 打开 [http://dmdbook.com/DATA.zip](http://dmdbook.com/DATA.zip) 下载并解压。  
+      - 将解压得到的 `DATA` 文件夹放到项目下的 `data/` 目录，使路径为：  
+        `data/DATA/FLUIDS/CYLINDER_ALL.mat`  
+
+   2) **运行数据预处理脚本**  
+
+      ```bash
+      python generate_data.py
+      ```
+
+      - 会读取 `data/DATA/FLUIDS/CYLINDER_ALL.mat`，重采样并归一化，生成/覆盖 **`data/flow_field.npy`**。  
+      - 若无 MAT 文件，可在 `generate_data.py` 的 `prepare_flow_data()` 调用中设 `use_synthetic=True`，改用合成数据。
 
 ### Step 2：训练模型并生成所有结果
 
@@ -182,8 +201,9 @@ python train.py
 ## 快速检查清单
 
 - [ ] 已安装依赖：`pip install -r requirements.txt`  
-- [ ] 已下载并解压 DATA.zip，且存在 `data/DATA/FLUIDS/CYLINDER_ALL.mat`  
-- [ ] 已运行 `python generate_data.py`，且存在 `data/flow_field.npy`  
+- [ ] 确认 `data/flow_field.npy` 存在（仓库默认已包含；若你选择重新处理，则由 `generate_data.py` 生成/覆盖）  
+- [ ] （可选，高级）已下载并解压 DATA.zip，且存在 `data/DATA/FLUIDS/CYLINDER_ALL.mat`  
+- [ ] （可选，高级）已运行 `python generate_data.py`，从原始数据重新生成 `data/flow_field.npy`  
 - [ ] 已运行 `python train.py`，且 `outputs/` 下生成全部图表与 `flow_ae_model.pth`  
 
 完成以上步骤即表示从数据到结果的全流程已跑通。

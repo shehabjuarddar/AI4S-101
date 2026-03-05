@@ -17,6 +17,9 @@ data/*.mat
 data/*.zip
 data/*.7z
 
+# Old geometry test files (not used)
+data/Cylinder2DGeom.*
+
 # Model weights and large outputs (optional)
 outputs/*.pth
 outputs/*.gif
