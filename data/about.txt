@@ -1,0 +1,65 @@
+2D Flow Around a Cylinder
+============================================================
+
+This is a 2D time-dependent flow field. It has been simulated using the Gerris Flow Solver at a Reynolds number of 160. It is given on a uniform grid.
+
+More information (file format, resolution, previous visualizations, etc.) can be found on http://tinoweinkauf.net/
+
+Also, pre-computed streak line vector fields are available for this data set on http://tinoweinkauf.net/
+
+
+How to Acknowledge
+============================================================
+
+To acknowledge the origin of the data set, please use a LaTeX snippet similar to the following:
+
+    This data set has been simulated by Tino Weinkauf \cite{weinkauf10c}
+    using the Free Software \emph{Gerris Flow Solver} \cite{gerrisflowsolver}.
+
+with the following BibTeX entries:
+
+    @ARTICLE{weinkauf10c,
+      author = {T.~Weinkauf and H.~Theisel},
+      title = {Streak Lines as Tangent Curves of a Derived Vector Field},
+      journal = {IEEE Transactions on Visualization and Computer Graphics (Proceedings Visualization 2010)},
+      year = {2010},
+      volume = {16},
+      pages = {1225--1234},
+      number = {6},
+      month = {November - December},
+      abstract = {Characteristic curves of vector fields include stream, path, and streak
+                  lines. Stream and path lines can be obtained by a simple vector field
+                  integration of an autonomous ODE system, i.e., they can be described
+                  as tangent curves of a vector field. This facilitates their mathematical
+                  analysis including the extraction of core lines around which stream
+                  or path lines exhibit swirling motion, or the computation of their
+                  curvature for every point in the domain without actually integrating
+                  them. Such a description of streak lines is not yet available, which
+                  excludes them from most of the feature extraction and analysis tools
+                  that have been developed in our community. In this paper, we develop
+                  the first description of streak lines as tangent curves of a derived
+                  vector field -- the streak line vector field -- and show how it can
+                  be computed from the spatial and temporal gradients of the flow map,
+                  i.e., a dense path line integration is required. We demonstrate the
+                  high accuracy of our approach by comparing it to solutions where
+                  the ground truth is analytically known and to solutions where the
+                  ground truth has been obtained using the classic streak line computation.
+                  Furthermore, we apply a number of feature extraction and analysis
+                  tools to the new streak line vector field including the extraction
+                  of cores of swirling streak lines and the computation of streak line
+                  curvature fields. These first applications foreshadow the large variety
+                  of possible future research directions based on our new mathematical
+                  description of streak lines.},
+      keywords = {unsteady flow visualization, streak lines, streak surfaces, feature extraction},
+      url = {http://tinoweinkauf.net/}
+    }
+
+    @ARTICLE{gerrisflowsolver,
+      author = {S. Popinet},
+      title = {Free Computational Fluid Dynamics},
+      journal = {ClusterWorld},
+      year = {2004},
+      volume = {2},
+      number = {6},
+      url = {http://gfs.sf.net/}
+    }

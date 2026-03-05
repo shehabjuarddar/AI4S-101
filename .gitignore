@@ -1,0 +1,25 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.DS_Store
+
+# Large raw data files (keep preprocessed numpy arrays only)
+data/DATA/
+data/DATA.zip
+data/Cylinder2D.am
+data/Cylinder2D.7z
+data/*.mat
+data/*.zip
+data/*.7z
+
+# Model weights and large outputs (optional)
+outputs/*.pth
+outputs/*.gif
+
+# Jupyter checkpoints
+.ipynb_checkpoints/

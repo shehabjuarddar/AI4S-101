@@ -1,0 +1,119 @@
+# Title: B\'enard--von K\'arm\'an Vortex Street for flow around a cylinder at Re=160
+#
+# Description:
+#
+# An example of 2D viscous flow around a simple solid boundary. Fluid
+# is injected to the left of a channel bounded by solid walls with a
+# slip boundary condition. A passive tracer is injected in the bottom
+# half of the inlet.
+#
+# Adaptive refinement is used based on both the vorticity and the
+# gradient of the passive tracer.
+#
+# After an initial growth phase, a classical B\'enard--von K\'arman
+# vortex street is formed.
+#
+# The results are visualised using MPEG movies of the vorticity
+# (Figure \ref{vorticity}) and tracer concentration (Figure
+# \ref{tracer}) generated on-the-fly.
+#
+# \begin{figure}[htbp]
+# \begin{center}
+# \htmladdnormallinkfoot{\includegraphics[width=\hsize]{vort.eps}}{vort.mpg}
+# \end{center}
+# \caption{MPEG movie of the vorticity field.}
+# \label{vorticity}
+# \end{figure}
+#
+# \begin{figure}[htbp]
+# \begin{center}
+# \htmladdnormallinkfoot{\includegraphics[width=\hsize]{t.eps}}{t.mpg}
+# \end{center}
+# \caption{MPEG movie of the tracer field.}
+# \label{tracer}
+# \end{figure}
+#
+# Author: St\'ephane Popinet
+# Command: gerris2D cylinder.gfs
+# Version: 0.6.4
+# Required files: cylinder.gts
+# Running time: 32 minutes
+# Generated files: t.mpg vort.mpg t.eps vort.eps
+#
+# The simulation domain has 8 GfsBox linked by 7 GfsGEdge
+8 7 GfsSimulation GfsBox GfsGEdge {} {
+
+  # Stop the simulation at t = 23
+  Time { end = 23 }
+  #~ Time { end = 1 }
+
+  # Use an initial refinement of 6 levels (i.e. 2^6=64x64 for each box)
+  Refine 6
+
+  # Insert the solid boundary defined by cylinder.gts
+  GtsSurfaceFile cylinder.gts
+
+  # Add a passive tracer called T
+  VariableTracer {} T
+
+  # Set the initial x-component of the velocity to 1
+  Init {} { U = 1 }
+
+  # Adapt the mesh using the vorticity criterion at every timestep
+  # down to a maximum level of 6 and with a maximum tolerance of 1e-2
+  AdaptVorticity { istep = 1 } { maxlevel = 6 cmax = 1e-2 }
+
+  # Adapt the mesh using the gradient criterion on variable T at
+  # every timestep, down to a maximum level of 6 and with a maximum tolerance of 1e-2
+  AdaptGradient { istep = 1 } { maxlevel = 6 cmax = 1e-2 } T
+
+  # Set a viscosity source term on the velocity vector with x-component U
+  # The Reynolds number is Re = D*U/Nu = 0.125*1/0.00078125 = 160
+  # where D is the cylinder diameter (as defined in cylinder.gts)
+  SourceDiffusion {} U 0.00078125
+  SourceDiffusion {} V 0.00078125
+
+  # Writes the time and timestep every 10 timesteps on standard output
+  OutputTime { istep = 50 end = 15} stdout
+  OutputTime { istep = 1 start = 15} stdout
+
+  # Outputs profiling information at the end of the simulation to standard output
+  OutputTiming { start = end } stdout
+
+  # Writes the simulation size every 10 timesteps on standard output
+  #~ OutputBalance { istep = 10 } stdout
+
+  # Writes info about the convergence of the Poisson solver on standard output
+  #~ OutputProjectionStats { istep = 10 } stdout
+
+  GfsOutputLocation { start = 15 step = 0.008 } {awk '{print $2,$3,$1, "\n", $7, "\n", $8;}' > cylinder.sls}  SamplePoints.txt
+
+#~ EventScript {istep = 10} {for file in *.out ; do cat "$file" | cut --fields 2-4,7,8 --delimiter " " | gzip -9 > "$file.txt.gz"; rm "$file"; done; }
+
+
+}
+GfsBox {
+  # Left boundary on the leftmost box is:
+  #   Dirichlet U=1 for the x-component of the velocity
+  #   Dirichlet T = 1 if y < 0, 0 otherwise
+  left = Boundary {
+    BcDirichlet U 1
+    BcDirichlet T { return y < 0. ? 1. : 0.; }
+  }
+}
+GfsBox {}
+GfsBox {}
+GfsBox {}
+GfsBox {}
+GfsBox {}
+GfsBox {}
+# Right boundary on the rightmost box is outflow
+GfsBox { right = BoundaryOutflow }
+# All the boxes are linked by left to right links
+1 2 right
+2 3 right
+3 4 right
+4 5 right
+5 6 right
+6 7 right
+7 8 right
